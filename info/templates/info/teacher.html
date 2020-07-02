@@ -1,0 +1,245 @@
+{% extends 'info/base.html' %}
+
+{% block css %}
+<style>
+    h3{
+        margin: 0 20px 20px 20px;
+        text-align: center;
+        color:maroon;
+    }
+    .dept1{
+        background-color: whitesmoke;
+        padding: 20px 0;
+        margin: 0;
+    }
+    .bt a{
+        padding: 3px 20px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;       
+    }
+    .bt{
+        background: white;
+        border: none;
+        padding: 2px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;
+    }
+    .bt a:hover{  
+        background-color: #036;
+        color: white;       
+    }
+    
+    .bt:hover{
+        background-color: #036;
+        color: white;  
+        
+    }
+    div .row input{
+        margin-bottom: 10px;
+        width: 80%;
+    }
+    
+    .dept .row{
+        margin-left: 200px;
+    }
+    #name{
+        width: 80%;
+    }
+    
+    table tr td a:hover {
+        color: #036;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+        /* background-color:white; */
+    }
+    table tr td:hover{
+        background: white;
+    }
+    table tr td a {
+        color: #036;
+        text-decoration:none;
+        opacity: 0.7;
+        font-weight: bold;
+    }
+    
+   table td{
+       padding-left: 10px;
+   }
+   table th{
+       padding: 10px;
+       background: white;
+   }
+   #de{
+       margin-left: 20px;
+   }
+   table tr td a {
+        color: maroon;
+        text-decoration:none;
+        opacity: 1; 
+        font-weight: bold;
+        padding: 0 15px;
+    }
+   table tr td button a:hover {
+        color: white;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    .st select{
+        width: 80%;
+    }
+    .st label{
+        font-weight: 700;
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="container-fluid" style="background: darkgray; color: white; padding: 10px 30px;">
+        <h2>TEACHER</h2>       
+    </div>
+
+    
+    
+    <!-- ====================================================================== -->
+
+    <div class="container-fluid dept1">
+        <p id="de"><b>Search Techer to Change</b>&nbsp;&nbsp;<input id="myInput" type="text" placeholder="Search..">
+            <button class="bt"><a href="" data-toggle="modal"  data-target="#addDeptModal">+Add Teacher</a></button></p>
+        
+      
+        {% if obj %}
+        <table class="table-bordered table-striped" width='100%'>
+            <thead>
+                <th>&nbsp;&nbsp;&nbsp;&nbsp;NAME</th>
+                <th>ID</th>
+                <th>USER NAME</th>
+                <th>ACTION</th>
+                
+                                                    
+            </thead>
+            <tbody id="myTable">
+            {% for a in obj %}  
+                <tr>  
+                    <td><a href="/info/admin/teacher/{{ a.id }}/change">{{ a.name }}</a></td>
+                    <td>{{ a.id }}</td> 
+                    <td>{{ a.user }}</td>
+                    <td>
+                        <button class="btn-success"><a href="/info/admin/teacher/{{ a.id }}/change">Edit</a></button>
+                        <button class="btn-danger"><a href="/info/admin/teacher/{{ a.id }}/delete">Delete</a></button>
+                    </td>    
+                </tr>  
+            {% endfor %} 
+                <small style="background-color: azure; color: green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>Total Teacher | {{ total }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                </small>
+            </tbody>
+            
+        </table>
+        {% endif %}
+    </div>
+
+    <!--================= ADD STUDENTS MODEL ---------------->
+
+    <div class="modal fade" id="addDeptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">        
+            <form action="{% url 'add_teacher' %}" method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><h3>ADD STUDENTS</h3></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid st">
+                            <div class="row">
+                                <div class="col-sm-4"><label for="">User Name</label></div>
+                                <div class="col-sm-8">{{ ob.user }}</div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-sm-4"><label for="">Teacher ID</label></div>
+                                <div class="col-sm-8">
+                                    <input type="text" name="id" id="t_id" onkeyup="checkstu()" required><br>
+                                    <small id="result"></small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4"><label for="">Dept Name</label></div>
+                                <div class="col-sm-8">{{ ob.dept }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4"><label for="">Techer Name</label></div>
+                                <div class="col-sm-8">{{ ob.name }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4"><label for="">Gender</label></div>
+                                <div class="col-sm-8">{{ ob.sex }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4"><label for="">Date of Birth</label></div>
+                                <div class="col-sm-8">{{ ob.DOB }}</div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="btb" type="submit">ADD</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+              $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+              });
+            });
+            </script>
+        <script>
+            if ( window.history.replaceState ) {
+                window.history.replaceState( null, null, window.location.href );
+            }
+        </script>
+        <script>
+            function checkstu(){
+                 let sn = document.getElementById("t_id").value;
+                 $.ajax({
+                     url: "{% url 'check_teacher' %}",
+                     type:"GET",
+                     data:{id:sn},
+                     
+                     success:function(data){
+                         if(data=="Exists"){
+                             $("#result").html("Teacher Already Exists").addClass("text-danger");
+                             $("#t_id").addClass("alert-danger");
+                             $("#btb").attr("disabled","disabled");
+                         }
+                         else{
+                             $("#result").html("")
+                             $("#t_id").removeClass("alert-danger");
+                             $("#btb").removeAttr("disabled","disabled");
+                         }
+                     }
+                 })                
+                
+            }
+        </script>
+{% endblock %}

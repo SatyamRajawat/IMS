@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}{% endblock %}</title>
+      {% load static %}
+
+    <!-- Bootstrap core CSS-->
+    <link href="{% static '/info/bootstrap/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static '/info/bootstrap/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Page level plugin CSS-->
+    <!-- <link href="{% static '/info/bootstrap/vendor/datatables/dataTables.bootstrap4.css' %}" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template-->
+    <link href="{% static '/info/bootstrap/css/sb-admin.css' %}" rel="stylesheet">
+
+    <!-- Latest compiled and minified CSS -->
+
+    <style>
+      .navbar-light .navbar-nav .nav-link{
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+      .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
+          color:maroon;
+          background-color: honeydew;
+      }
+      .sidebar .nav-item .nav-link{
+          color: white;
+          text-transform: uppercase;
+          font-weight: 400;
+      }
+      .sidebar .nav-item .nav-link:active, .sidebar .nav-item .nav-link:focus, .sidebar .nav-item .nav-link:hover{
+          background-color:honeydew;
+          color: maroon;
+      }
+      .messages .alert-error{
+        background: antiquewhite;
+        color: red;
+      }
+  </style>
+      {% block css %}
+      
+      {% endblock %}
+
+  </head>
+
+  <body id="page-top">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light static-top" style="background-color: #7E8A93!important; color: white!important;">
+      <div class="container">
+          <a class="navbar-brand" href=""> IMS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive" >
+          <ul class="navbar-nav ml-auto">
+            
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}" >Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">AboutUs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">ContacUs</a>
+            </li>
+            
+
+            {% if request.user.is_student %}
+            <li class="nav-item">
+              <a class="nav-link text-capitalize">{{ request.user.student.name }}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+            </li>
+            {% elif request.user.is_teacher %}
+            <li class="nav-item">
+              <a class="nav-link text-capitalize">{{ request.user.teacher.name }}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+            </li>
+
+            {% elif request.user.is_superuser %}
+            
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="/accounts/login" data-toggle="modal"  data-target="#loginModal">SignIn</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/info/signup" data-toggle="modal"  data-target="#signupModal">SignUp</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div id="wrapper">
+
+      <ul class="sidebar navbar-nav" style="background-color: #8193a3;">
+        {% if request.user.is_student %}
+            <li class="nav-item">
+              <a class="nav-link "><b>{{ request.user }}</b></a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="{% url 'attendance' request.user.student.USN %}">
+                <span>Attendance</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'attendance' request.user.student.USN %}">
+                <span>Attendance By Subject</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'marks_list' request.user.student.USN %}">
+                <span>Marks</span>
+              </a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="{% url 'timetable' request.user.student.class_id_id %}">
+                <span>Time Table</span>
+              </a>
+            </li> -->
+
+        {% elif request.user.is_teacher %}
+            <li class="nav-item">
+              <a class="nav-link text-capitalize">{{ request.user }}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 't_clas' request.user.teacher.id 1 %}">
+                <span>Attendance</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="">
+                <span>Marks</span>
+              </a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="">
+                <span>Time Table</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="">
+                <span>Reports</span>
+              </a>
+            </li>
+        {% elif request.user.is_superuser %}
+        <li class="nav-item">
+          <a class="nav-link text-capitalize">{{ request.user }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'add_assign' %}">
+            <span>Assign Teacher</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'add_classes' %}">
+            <span>Classes</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'course' %}">
+            <span>Courses</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'add_dept' %}">
+            <span>Departments</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="">
+            <span>Marks</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'add_student' %}">
+            <span>Students</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'add_teacher' %}">
+            <span>Teachers</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/info/signup" data-toggle="modal"  data-target="#signupModal">
+            <span>Add User</span>        
+          </a>
+        </li>
+
+        {% endif %}
+      </ul>
+
+      <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+          <!-- Breadcrumbs-->
+{#          <ol class="breadcrumb">#}
+{#            <li class="breadcrumb-item">#}
+{#              <a href="index.html">Dashboard</a>#}
+{#            </li>#}
+{#            <li class="breadcrumb-item active">Blank Page</li>#}
+{#          </ol>#}
+
+          <!-- Page Content -->
+        {% if messages %}
+            <div class="messages" id="message">
+                {% for message in messages %}
+                    <div {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif %}>{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}
+        
+        {% endblock %}
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+{#        <footer class="sticky-footer">#}
+{#          <div class="container my-auto">#}
+{#            <div class="copyright text-center my-auto">#}
+{#              <span>Copyright © Your Website 2018</span>#}
+{#            </div>#}
+{#          </div>#}
+{#        </footer>#}
+
+      </div>
+      <!-- /.content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="/info/bas">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- LOGIN MODEL -------------- -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        
+        <form action="{% url 'signin' %}" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Login</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">                
+                    <label for="">Username</label>
+                    <input type="text" name="username" id=""><br>
+                    <label for="">Password</label>
+                    <input type="password" name="password" id="">
+                    
+                </div>
+                <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="submit">SignIn</button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+
+    <!--================ SIGNUP MODEL ============-------------- -->
+
+    <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        
+        <form action="{% url 'signup' %}" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Please SignUp</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <table align="center">
+                        <!-- <tr>
+                            <th><label for="">First Name</label></th>
+                            <td><input type="text" name="first_name" id="" placeholder="first name" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="">Last Name</label></th>
+                            <td><input type="text" name="last_name" id="" placeholder="last name" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="">E-mail</label></th>
+                            <td><input type="email" name="email" id="" placeholder="email" required></td>
+                        </tr> -->
+                        <tr>
+                            <th><label for="">Username</label></th>
+                            <td><input type="text" name="username" id="" placeholder="username" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="">Password</label></th>
+                            <td><input type="password" name="password1" id="" placeholder="password" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="">Confirm Password</label></th>
+                            <td><input type="password" name="password2" id="" placeholder="confirm password" required></td>
+                        </tr>
+                        
+                    </table>             
+                    
+                </div>
+                <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="submit">SignUp</button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static '/info/bootstrap/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static '/info/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static '/info/bootstrap/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static '/info/bootstrap/js/sb-admin.min.js' %}"></script>
+
+   {% block scripts %}
+   
+   {% endblock %}
+   <script>
+      var message_ele = document.getElementById("message");
+      setTimeout(function(){ 
+      message_ele.style.display = "None"; 
+      }, 3000);
+  </script>
+
+
+  </body>
+
+</html>

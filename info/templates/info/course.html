@@ -1,0 +1,233 @@
+{% extends 'info/base.html' %}
+
+{% block css %}
+<style>
+    h3{
+        margin: 0 20px 20px 20px;
+        text-align: center;
+        color:maroon;
+    }
+    .dept1{
+        background-color: whitesmoke;
+        padding: 20px 0;
+        margin: 0;
+    }
+    .bt a{
+        padding: 3px 20px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;       
+    }
+    .bt{
+        background: white;
+        border: none;
+        padding: 2px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;
+    }
+    .bt a:hover{  
+        background-color: #036;
+        color: white;       
+    }
+    
+    .bt:hover{
+        background-color: #036;
+        color: white;  
+        
+    }
+    div .row input{
+        margin-bottom: 10px;
+        width: 80%;
+    }
+    
+    .dept .row{
+        margin-left: 200px;
+    }
+    #name{
+        width: 80%;
+    }
+    
+    table tr td a:hover {
+        color: #036;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    table tr td a {
+        color: #036;
+        text-decoration:none;
+        opacity: 0.7;
+        font-weight: bold;
+    }
+    
+   table td{
+       padding-left: 10px;
+   }
+   table th{
+       padding: 10px;
+       background: white;
+   }
+   #de{
+       margin-left: 20px;
+   }
+   table tr td a {
+        color: maroon;
+        text-decoration:none;
+        opacity: 1; 
+        font-weight: bold;
+        padding: 0 15px;
+    }
+   table tr td button a:hover {
+        color: white;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    .model-body input,select{
+        width: 230px;
+    }
+    .model-body tr td ,input{
+        width: 230px;
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="container-fluid" style="background: darkgray; color: white; padding: 10px 30px;">
+        <h2>COURSES</h2>       
+    </div>
+
+    
+    
+    <!-- ====================================================================== -->
+
+    <div class="container-fluid dept1">
+        <p id="de"><b>Search Course to Change</b>&nbsp;&nbsp;<input id="myInput" type="text" placeholder="Search..">
+            <button class="bt"><a href="" data-toggle="modal"  data-target="#addCourseModal">+Add Course</a></button></p>
+        
+      
+        {% if data %}
+        <table class="table-bordered table-striped" width='100%'>
+            <thead>
+                <th>Course ID</th>
+                <th>Name</th>
+                
+                <th>Dept Name</th>
+                <th>Short Name</th>
+                <th>Action</th>
+                                                    
+            </thead>
+            <tbody id="myTable">
+            {% for a in data %}  
+                <tr>
+                    <td><a href="/info/admin/course/{{ a.id }}/change">{{ a.id }}</a></td> 
+                    <td><b>{{ a.name }}</b></td> 
+                    <td><b>{{ a.dept }}</b></td>  
+                    <td><b>{{ a.shortname }}</b></td>
+                    <td>
+                        <button class="btn-success"><a href="/info/admin/course/{{ a.id }}/change">Edit</a></button>
+                        <button class="btn-danger"><a href="/info/admin/course/{{ a.id }}/delete">Delete</a></button>
+                    </td>   
+                </tr>  
+            {% endfor %} 
+            
+            </tbody>
+            
+        </table>
+        
+
+        {% endif %}
+    </div>
+
+    <!--================= ADD COURSE MODEL ---------------->
+
+    <div class="modal fade" id="addCourseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">        
+            <form action="{% url 'course' %}" method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><h3>ADD COURSE</h3></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <div></div>
+                        <table>
+                            <tr>
+                                <th>Dept Name</th>
+                                <td>{{ ob.dept }}</td>
+                            </tr>
+                            <tr>
+                                <th>Course ID</th>
+                                <td><input type="text" name="id" id="course" onkeyup="checkcourse()"><small id="result"></small></td>
+                            </tr>
+                            <tr>
+                                <th>Course Name</th>
+                                <td>{{ ob.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Short Name</th>
+                                <td>{{ ob.shortname }}</td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                    <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="btb" type="submit">ADD</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+{% endblock %}
+
+{% block scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+              $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+              });
+            });
+            </script>
+        <script>
+            if ( window.history.replaceState ) {
+                window.history.replaceState( null, null, window.location.href );
+            }
+        </script>
+        <script>
+            function checkcourse(){
+                 let sn = document.getElementById("course").value;
+                 $.ajax({
+                     url: "{% url 'check_course' %}",
+                     type:"GET",
+                     data:{id:sn},
+                     
+                     success:function(data){
+                         if(data=="Exists"){
+                             $("#result").html("Already Exists").addClass("text-danger");
+                             $("#course").addClass("alert-danger");
+                             $("#btb").attr("disabled","disabled");
+                         }
+                         else{
+                             $("#result").html("")
+                             $("#course").removeClass("alert-danger");
+                             $("#btb").removeAttr("disabled","disabled");
+                         }
+                     }
+                 })                
+                
+            }
+        </script>
+{% endblock %}

@@ -1,0 +1,271 @@
+{% extends 'info/base.html' %}
+
+{% block css %}
+<style>
+    h3{
+        margin: 0 20px 20px 20px;
+        text-align: center;
+        color:maroon;
+    }
+    .dept, .dept1{
+        background-color: whitesmoke;
+        padding: 20px 0;
+        margin: 0;
+    }
+    .dept input,select{
+        margin-bottom: 10px;
+        width: 50%;
+    }
+    .dept label{
+        padding-left: 100px;
+        font-size: 17px;
+        font-weight: bold;
+    }
+    
+    .dept .row{
+        margin-left: 200px;
+    }
+    #name{
+        width: 80%;
+    }
+    
+    table tr td a:hover {
+        color: #036;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    table tr td a {
+        color: #036;
+        text-decoration:none;
+        opacity: 0.7;
+        font-weight: bold;
+    }
+    
+   table td{
+       padding-left: 10px;
+   }
+   table th{
+       padding: 10px;
+   }
+   #de{
+       margin-left: 20px;
+   }
+   table tr td a {
+        color: maroon;
+        text-decoration:none;
+        opacity: 1; 
+        font-weight: bold;
+    }
+   table tr td button a:hover {
+        color: white;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    table tr td button a:hover {
+        color: white;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    .bt a{
+        padding: 3px 20px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;
+        width: 180px;       
+    }
+    .bt a:hover{  
+        background-color: #036;
+        color: white;       
+    }
+    .bt1{
+        width: 80px;
+    }
+    .bt{
+        background: white;
+        border: none;
+        padding: 3px 0px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;
+        
+    }
+    .bt:hover{
+        background-color: #036;
+        color: white;  
+        
+    }
+    .top{
+        padding-top: 20px;
+    }
+    .sd select{
+        width: 80%;
+    }
+    .sd input{
+        width: 80%;
+        margin-bottom: 5px;
+    }
+    .sd label{
+        width: 110px;
+        font-weight: 700;
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+    <div class="container-fluid dept">
+        <h3>Change Class </h3>
+
+        <div style="height: 5px; background: white;"></div>
+
+            <form action="/info/admin/class/{{ obj.id }}/change" method="post">
+                {% csrf_token %}
+            <div class="container-fluid top">   
+                <div class="row">
+                    <div class="col-sm-3"><label for="">Class ID</label></div>
+                    <div class="col-sm-9">{{ ob.id }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><label for="">Dept Name</label></div>
+                    <div class="col-sm-9">{{ ob.dept }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><label for="">Section</label></div>
+                    <div class="col-sm-9">{{ ob.section }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><label for="">Semester</label></div>
+                    <div class="col-sm-9">{{ ob.sem }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-1"><button type="submit" class="bt bt1">Update</button></div>&nbsp;&nbsp;                    
+                    <div class="col-sm-1"><button class="bt"><a href="/info/admin/class/{{ obj.id }}/delete">Delete</a></button></div>
+                </div>
+            </div>
+            </form>
+    </div>
+
+    
+    <div style="height: 20px;"></div>
+ 
+    <!-- ============================= -->
+
+    
+    <div class="container-fluid dept1">
+        <h4 style="color: blueviolet;padding-left: 25px; font-family: 'Times New Roman', Times, serif;  ">STUDENTS({{total}})</h4>
+        <hr>
+        
+        
+
+        <p id="de"><b>Search Student to Change</b>&nbsp;&nbsp;<input id="myInput" type="text" placeholder="Search..">
+            &nbsp;&nbsp;&nbsp;&nbsp;<button class="bt"><a href="/info/admin/student">Change Students</a></button>
+        </p>      
+        {% if st %}
+        <table class="table-bordered table-striped" width='100%'>
+            <thead>
+                <th>USER NAME</th>
+                <th>USN</th>
+                <th >NAME</th>
+                <th >GENDER</th>
+                <th >DOB</th>  
+            </thead>
+            <tbody id="myTable">
+            {% for a in st %}  
+                <tr>   
+                    <td><a href="">{{ a.user }}</a></td> 
+                    <td>{{ a.USN }}</td> 
+                    <td>{{ a.name }}</td>     
+                    <td>{{ a.sex }}</td> 
+                    <td>{{ a.DOB }}</td>                                   
+                </tr>  
+            {% endfor %} 
+            
+            </tbody>
+            
+        </table>
+
+        {% else %}
+            <div class="container-fluid"><h4>No Classes Available</h4></div>
+        {% endif %}
+    </div>
+    
+    <!--================= ADD CLASSES MODEL ---------------->
+
+    <!-- <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">        
+            <form action="{% url 'add_student' %}" method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><h3>ADD STUDENT</h3></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid sd">
+                            <div class="row">
+                                <div class="col-sm-3"><label for="">User Name</label></div>
+                                <div class="col-sm-9">{{ as.user }}</div>
+                            </div>
+                            <div class="row" hidden>
+                                <div class="col-sm-3"><label for="">Class ID</label></div>
+                                <div class="col-sm-9">{{ ob.id }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3"><label for="">USN</label></div>
+                                <div class="col-sm-9">{{ as.USN }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3"><label for="">Student Name</label></div>
+                                <div class="col-sm-9">{{ as.name }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3"><label for="">Gender</label></div>
+                                <div class="col-sm-9">{{ as.sex }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3"><label for="">DOB</label></div>
+                                <div class="col-sm-9">{{ as.DOB }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="btb" type="submit">ADD</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div> -->
+
+{% endblock %}
+
+{% block scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+              $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+              });
+            });
+            </script>
+        <script>
+            if ( window.history.replaceState ) {
+                window.history.replaceState( null, null, window.location.href );
+            }
+        </script>
+        <script>
+            document.getElementById("id_id").readOnly = true;
+        $("#id_id").attr("title", "Uniqe field can't updated");
+        </script>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends 'info/base.html' %}
+
+{% block css %}
+<style>
+     h3{
+        margin: 0 20px 20px 20px;
+        text-align: center;
+        color:maroon;
+    }
+    .dept, .dept1{
+        background-color: whitesmoke;
+        padding: 20px 0;
+        margin: 0;
+    }
+    .dept input,select{
+        margin-bottom: 10px;
+        width: 50%;
+    }
+    .dept label{
+        padding-left: 100px;
+        font-size: 17px;
+        font-weight: bold;
+    }
+    .dept .row{
+        margin-left: 200px;
+    }
+    #name{
+        width: 80%;
+    }
+    
+    table tr td a:hover {
+        color: #036;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    table tr td a {
+        color: #036;
+        text-decoration:none;
+        opacity: 0.7;
+        font-weight: bold;
+    }
+    
+   table td{
+       padding-left: 10px;
+   }
+   table th{
+       padding: 10px;
+       background: white;
+   }
+   #de{
+       margin-left: 20px;
+   }
+   table tr td a {
+        color: maroon;
+        text-decoration:none;
+        opacity: 1; 
+        font-weight: bold;
+    }
+   table tr td button a:hover {
+        color: white;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    table tr td button a:hover {
+        color: white;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    .bt a{
+        padding: 3px 20px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;
+        width: 180px;       
+    }
+    .bt a:hover{  
+        background-color: #036;
+        color: white;       
+    }
+    .bt1{
+        width: 80px;
+    }
+    .bt{
+        background: white;
+        border: none;
+        padding: 2px 0px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;
+        
+    }
+    .bt:hover{
+        background-color: #036;
+        color: white;  
+        
+    }
+    .top{
+        padding-top: 20px;
+    }
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container-fluid dept">
+    
+    <h3>Change Course</h3>
+    <div style="height: 5px; background: white;"></div>
+    <form action="/info/admin/course/{{ obj.id }}/change" method="post">
+        {% csrf_token %}
+
+        <div class="container-fluid top">
+            <div class="row">
+                <div class="col-sm-3"><label for="">Dept Name</label></div>
+                <div class="col-sm-9">{{ ob.dept }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"><label for="">Course ID</label></div>
+                <div class="col-sm-9">{{ ob.id }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"><label for="">Name</label></div>
+                <div class="col-sm-9">{{ ob.name }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"><label for="">Short Name</label></div>
+                <div class="col-sm-9">{{ ob.shortname }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-1"><button type="submit" class="bt bt1">Update</button></div>&nbsp;&nbsp;                    
+                <div class="col-sm-1"><button class="bt"><a href="/info/admin/class/{{ obj.id }}/delete">Delete</a></button></div>
+            </div>
+        </div>
+    </form>
+    
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.getElementById("id_id").readOnly = true;
+        $("#id_id").attr("title", "Uniqe field can't updated");
+    </script>
+{% endblock %}

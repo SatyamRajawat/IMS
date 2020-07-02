@@ -1,0 +1,192 @@
+{% extends 'info/base.html' %}
+
+{% block css %}
+<style>
+    h3{
+        margin: 0 20px 20px 20px;
+        text-align: center;
+        color:maroon;
+    }
+    .dept, .dept1{
+        background-color: whitesmoke;
+        padding: 20px 0;
+        margin: 0;
+    }
+    .dept input,select{
+        margin-bottom: 10px;
+        width: 50%;
+    }
+    .dept label{
+        padding-left: 100px;
+        font-size: 17px;
+        font-weight: bold;
+    }
+    
+    .dept .row{
+        margin-left: 200px;
+    }
+    #name{
+        width: 80%;
+    }
+    
+    table tr td a:hover {
+        color: #036;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    table tr td a {
+        color: #036;
+        text-decoration:none;
+        opacity: 0.7;
+        font-weight: bold;
+    }
+    
+   table td{
+       padding-left: 10px;
+   }
+   table th{
+       padding: 10px;
+   }
+   #de{
+       margin-left: 20px;
+   }
+   table tr td a {
+        color: maroon;
+        text-decoration:none;
+        opacity: 1; 
+        font-weight: bold;
+    }
+   table tr td button a:hover {
+        color: white;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    table tr td button a:hover {
+        color: white;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    .bt a{
+        padding: 3px 20px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;
+        width: 180px;       
+    }
+    .bt a:hover{  
+        background-color: #036;
+        color: white;       
+    }
+    .bt1{
+        width: 80px;
+    }
+    .bt{
+        background: white;
+        border: none;
+        padding: 3px 0px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;
+        
+    }
+    .bt:hover{
+        background-color: #036;
+        color: white;  
+        
+    }
+    .top{
+        padding-top: 20px;
+    }
+    .sd select{
+        width: 80%;
+    }
+    .sd input{
+        width: 80%;
+        margin-bottom: 5px;
+    }
+    .sd label{
+        width: 110px;
+        font-weight: 700;
+    }
+    #usn{
+        color: red;
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+    <div class="container-fluid dept">
+        <h3>Change Student </h3>
+
+        <div style="height: 5px; background: white;"></div>
+
+            <form action="" method="post">
+                {% csrf_token %}
+            <div class="container-fluid top">
+                <div class="row">
+                    <div class="col-sm-3"><label for=""> Teacher ID</label></div>
+                    <div class="col-sm-9">{{ ob.id }}&nbsp;&nbsp;<small id="usn">Can't Change</small></div>
+                </div>   
+                <div class="row">
+                    <div class="col-sm-3"><label for="">User Name</label></div>
+                    <div class="col-sm-9">{{ ob.user }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><label for="">Dept Name</label></div>
+                    <div class="col-sm-9">{{ ob.dept }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><label for="">Teacher Name</label></div>
+                    <div class="col-sm-9">{{ ob.name }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><label for="">Gender</label></div>
+                    <div class="col-sm-9">{{ ob.sex }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><label for="">Date of Birth</label></div>
+                    <div class="col-sm-9">{{ ob.DOB }}</div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-1"><button type="submit" class="bt bt1">Update</button></div>&nbsp;&nbsp;                    
+                    <div class="col-sm-1"><button class="bt"><a href="/info/admin/teacher/{{ obj.id }}/delete">Delete</a></button></div>
+                </div>
+            </div>
+            </form>
+    </div>
+
+    
+    
+   
+{% endblock %}
+
+{% block scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+              $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+              });
+            });
+            </script>
+        <script>
+            if ( window.history.replaceState ) {
+                window.history.replaceState( null, null, window.location.href );
+            }
+        </script>
+        <script>
+            document.getElementById("id_id").readOnly = true;
+        
+        </script>
+{% endblock %}

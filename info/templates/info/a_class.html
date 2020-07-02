@@ -1,0 +1,232 @@
+{% extends 'info/base.html' %}
+
+{% block css %}
+<style>
+    h3{
+        margin: 0 20px 20px 20px;
+        text-align: center;
+        color:maroon;
+    }
+    .dept1{
+        background-color: whitesmoke;
+        padding: 20px 0;
+        margin: 0;
+    }
+    .bt a{
+        padding: 3px 20px;
+        font-weight: 700;
+        text-decoration: none;    
+        color: #036;       
+    }
+    .bt a:hover{  
+        background-color: #036;
+        color: white;       
+    }
+    .bt{
+        background: white;
+        border: none;
+        margin-left: 30px;
+        padding: 4px;
+    }
+    div .row input{
+        margin-bottom: 10px;
+        width: 80%;
+    }
+    
+    .dept .row{
+        margin-left: 200px;
+    }
+    #name{
+        width: 80%;
+    }
+    
+    table tr td a:hover {
+        color: #036;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    table tr td a {
+        color: #036;
+        text-decoration:none;
+        opacity: 0.7;
+        font-weight: bold;
+    }
+    
+   table td{
+       padding-left: 10px;
+   }
+   table th{
+       padding: 10px;
+       background: white;
+   }
+   #de{
+       margin-left: 20px;
+   }
+   table tr td a {
+        color: maroon;
+        text-decoration:none;
+        opacity: 1; 
+        font-weight: bold;
+        padding: 0 15px;
+    }
+   table tr td button a:hover {
+        color: white;
+        text-decoration:none;
+        opacity: 1;
+        font-weight: bold;
+    }
+    table tr td:hover{
+        background: white;
+    }
+    .model-body input,select{
+        width: 230px;
+    }
+    .model-body tr td ,input{
+        width: 230px;
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="container-fluid" style="background: darkgray; color: white; padding: 10px 30px;">
+        <h2>CLASSES</h2>       
+    </div>
+
+    
+    
+    <!-- ====================================================================== -->
+
+    <div class="container-fluid dept1">
+        <p id="de"><b>Search Classes to Change</b>&nbsp;&nbsp;<input id="myInput" type="text" placeholder="Search..">
+            <button class="bt"><a href="" data-toggle="modal"  data-target="#addClassModal">+Add Classes</a></button></p>
+        
+      
+        {% if data %}
+        <table class="table-bordered table-striped" width='100%'>
+            <thead>
+                <th>&nbsp;&nbsp;&nbsp;CLASS ID</th>
+                <th>DEPARTMENT NAME</th>
+                <th>SEMESTER</th>
+                <th>SECTION</th>                
+                <th >ACTION</th>
+                                                    
+            </thead>
+            <tbody id="myTable">
+            {% for a in data %}  
+                <tr>  
+                    <td><a href="/info/admin/class/{{ a.id }}/change">{{ a.id }}</a></td> 
+                    <td><b>{{ a.dept }}</b></td>
+                    <td><b>{{ a.sem }}</b></td>  
+                    <td><b>{{ a.section }}</b></td>
+                    <td>
+                        <button class="btn-success"><a href="/info/admin/class/{{ a.id }}/change">Edit</a></button>
+                        <button class="btn-danger"><a href="/info/admin/class/{{ a.id }}/delete">Delete</a></button>
+                    </td>  
+                </tr>  
+            {% endfor %} 
+                <small style="background-color: azure; color: green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>Total Classes | {{ total }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                </small>
+            </tbody>
+            
+        </table>
+        <!-- <div style="margin-top: 10px;color: darkblue;"><b>&nbsp;&nbsp;&nbsp; DEPT "{{ total }}"</b></div> -->
+        
+        {% else %}
+        <div class="container-fluid">
+            <h4>No Classes Available Here Please ADD</h4>
+        </div>
+        {% endif %}
+        
+    </div>
+
+    <!--================= ADD CLASSES MODEL ---------------->
+
+    <div class="modal fade" id="addClassModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">        
+            <form action="{% url 'add_classes' %}" method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><h3>ADD CLASSES</h3></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                       <table>
+                           <tr>
+                               <th> CLass ID</th>
+                               <td><input type="text" name="id" placeholder="Enter Class ID" id="class_id" onkeyup="checclass()"><small id="result"></small></td>
+                           </tr>
+                           <tr>
+                                <th>Dept Name</th>
+                                <td>{{ ob.dept }}</td>
+                            </tr>
+                            <tr>
+                                <th>Section</th>
+                                <td>{{ob.section}}</td>
+                            </tr>
+                            <tr>
+                                <th>Sem</th>
+                                <td>{{ ob.sem }}</td>
+                            </tr>
+                        <!-- {{ ob.as_table }} -->
+                       </table>                        
+                    </div>
+                    <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="btb" type="submit">ADD</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+              $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+              });
+            });
+            </script>
+        <script>
+            if ( window.history.replaceState ) {
+                window.history.replaceState( null, null, window.location.href );
+            }
+        </script>
+        <script>
+            function checclass(){
+                 let sn = document.getElementById("class_id").value;
+                 $.ajax({
+                     url: "{% url 'check_class' %}",
+                     type:"GET",
+                     data:{id:sn},
+                     
+                     success:function(data){
+                         if(data=="Exists"){
+                             $("#result").html("Class Already Exists").addClass("text-danger");
+                             $("#class_id").addClass("alert-danger");
+                             $("#btb").attr("disabled","disabled");
+                         }
+                         else{
+                             $("#result").html("")
+                             $("#class_id").removeClass("alert-danger");
+                             $("#btb").removeAttr("disabled","disabled");
+                         }
+                     }
+                 })                
+                
+            }
+        </script>
+{% endblock %}

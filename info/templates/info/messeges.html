@@ -1,0 +1,36 @@
+
+<style>
+	.alert-error{
+		color: #a94442;
+		background-color: #f2dede;
+		border-color: #ebccd1;
+	}
+	.alert{
+		padding: 7px 38px;
+	}
+	.messages{
+		width: 835px;
+		padding: 3px 3px;		
+	}
+</style>
+
+{% if messages %}
+<div class="container messages" id="message">
+	{% for message in messages %}
+		<div {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif %}>{{ message }}</div>
+	{% endfor %}
+</div>
+{% endif %}
+
+{% if status %}
+<div class="container messages" id="message">
+	<div class="alert alert-success">{{ status }}</div>
+</div>
+{% endif %}
+		
+<!-- <script>
+	var message_ele = document.getElementById("message");
+	setTimeout(function(){ 
+	message_ele.style.display = "None"; 
+	}, 3000);
+</script> -->
